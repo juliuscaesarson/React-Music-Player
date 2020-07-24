@@ -7,16 +7,6 @@ var cors = require('cors');
 var csrf = require('csurf');
 var bodyParser = require('body-parser');
 
-// var admin = require("firebase-admin");
-
-// const serviceAccount = require("./serviceAccountKey.json");
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://soundcloud-c3feb.firebaseio.com"
-// });
-
-
 const csrfMiddleware = csrf({ cookie: true});
 
 var app = express();
@@ -47,6 +37,7 @@ app.all("*", (req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/testAPI', testAPIRouter);
+app.use('/',require('./routes'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
