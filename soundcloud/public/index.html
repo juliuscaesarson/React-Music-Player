@@ -39,5 +39,28 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  </body>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyBqjlUw4mmHCifP3BbleVp5sLAUWTYpR74",
+      authDomain: "soundcloud-c3feb.firebaseapp.com",
+      databaseURL: "https://soundcloud-c3feb.firebaseio.com",
+      projectId: "soundcloud-c3feb",
+      storageBucket: "soundcloud-c3feb.appspot.com",
+      messagingSenderId: "1010127862680",
+      appId: "1:1010127862680:web:23e8dd47c88df362d309ed",
+      measurementId: "G-RJF1VBYCE6"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
+  </body> 
 </html>

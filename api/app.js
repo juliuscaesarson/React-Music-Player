@@ -4,6 +4,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+var csrf = require('csurf');
+var bodyParser = require('body-parser');
+
+// var admin = require("firebase-admin");
+
+// const serviceAccount = require("./serviceAccountKey.json");
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: "https://soundcloud-c3feb.firebaseio.com"
+// });
+
+
+const csrfMiddleware = csrf({ cookie: true});
 
 var app = express();
 app.use(cors());
@@ -21,6 +35,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser.json());
+app.use(csrfMiddleware);
+
+app.all("*", (req, res, next) => {
+  res.cookie("XSRF-TOKEN", req.csrfToken());
+  next();
+})
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
