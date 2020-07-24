@@ -37,6 +37,7 @@ app.all("*", (req, res, next) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/testAPI', testAPIRouter);
+// Firebase https://medium.com/@therishugupta/store-and-retrieve-data-from-the-firebase-database-in-the-nodejs-app-ee2030b6ef4
 app.use('/',require('./routes'));
 
 // catch 404 and forward to error handler
