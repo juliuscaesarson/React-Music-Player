@@ -19,9 +19,10 @@ class App extends React.Component {
   }
 
   callUsers() {
-    fetch('http://ec2-54-164-243-131.compute-1.amazonaws.com:9000/users')
+    fetch('http://ec2-54-164-243-131.compute-1.amazonaws.com:9000/getUsers')
     .then(res => res.json())
-    .then(res => this.setState({ users: res }))
+    .then(res => this.setState({ users: res.users }))
+    .then(res => console.log(this.state.users))
     .catch(err => console.log(err));
   }
   
@@ -43,9 +44,9 @@ class App extends React.Component {
                 
           </div>
           <h1>Users</h1>
-          {this.state.users.map(user =>
-            <div key={user.id}>{user.username}</div>
-          )}
+          {/* {this.state.users.map(user =>
+            <div>{user.username}</div>
+          )} */}
 
         </header>
       </div>
