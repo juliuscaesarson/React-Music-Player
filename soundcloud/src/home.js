@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import fire from './config/fire';
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: null
+      file: null,
     }
     // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
     this.logout = this.logout.bind(this);
@@ -25,13 +25,10 @@ class Home extends Component {
   }
 
   upload() {
-    const file = this.state.file[0]
+    const file = this.state.file
     const storageRef = fire.storage().ref();
     const fileRef = storageRef.child(file.name);
-    const metadata = {
-      user: this.user
-    };
-    fileRef.put(file, metadata).then(() => {
+    fileRef.put(file).then(() => {
       console.log("Uploaded file");
     })
     
@@ -45,7 +42,7 @@ class Home extends Component {
             <input type="file" onChange={(e) => {this.onChangeFile(e.target.files)}} />
             <button onClick={this.upload}>Upload</button>
             <button onClick={this.logout} className="btn btn-success">Logout</button>
-            
+            {this.state.email}
         </div>
     );
   }

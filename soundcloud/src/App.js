@@ -27,7 +27,6 @@ class App extends Component {
     fire.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({user});
-
       }
       else {
         this.setState({user: null});
