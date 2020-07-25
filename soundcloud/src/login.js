@@ -4,6 +4,7 @@ import fire from './config/fire';
 class Login extends Component {
   constructor(props) {
     super(props);
+    // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
     this.login = this.login.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.signup = this.signup.bind(this);
@@ -14,12 +15,13 @@ class Login extends Component {
   }
 
   handleChange(e) {
+    // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
     this.setState({ [e.target.name]: e.target.value });
   }
 
   login(e) {
     e.preventDefault();
-    // Firebase login method from Firebase tutorial
+    // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
     fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((u) => {
     }).catch((error) => {
       console.log(error);
@@ -28,7 +30,7 @@ class Login extends Component {
 
   signup(e){
     e.preventDefault();
-    // Firebase sign up method from Firebase tutorial
+    // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
     fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then((u)=>{
     }).then((u)=>{console.log(u)})
     .catch((error) => {
@@ -38,7 +40,7 @@ class Login extends Component {
 
   render() {
     return (
-       <div className="col-md-6">
+       <div className="col-md-10">
           <form>
             <div className="form">
               <label htmlFor="emailInput">Email Address</label>

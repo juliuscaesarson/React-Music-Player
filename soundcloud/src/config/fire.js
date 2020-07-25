@@ -1,7 +1,8 @@
 import * as firebase from 'firebase';
+import 'firebase/storage';
 
 // Your web app's Firebase configuration
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyBqjlUw4mmHCifP3BbleVp5sLAUWTYpR74",
   authDomain: "soundcloud-c3feb.firebaseapp.com",
   databaseURL: "https://soundcloud-c3feb.firebaseio.com",
