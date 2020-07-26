@@ -58,7 +58,7 @@ class Home extends Component {
           <h1>React Player</h1>
         </div>
           <input type="file" onChange={(e) => {this.onChangeFile(e.target.files)}} />
-          <button onClick={this.upload}>Upload</button>
+          <button onClick={this.upload} className="btn btn-primary">Upload</button>
           <button onClick={this.logout} className="btn btn-success">Logout</button>
           
       </div>
