@@ -1,8 +1,15 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+    // Only logged in users can view all files uploaded
     match /{allPaths=**} {
-      allow read, write: if request.auth!=null;
+      allow read: if request.auth!=null;
+    }
+
+    // Only an individual user can write to their files
+    match /{userId}/{allPaths=**} {
+      allow read,write: if request.auth.uid == userId;
+      
     }
   }
 }
