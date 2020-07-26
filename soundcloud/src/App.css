@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+h1 {
+  display: inline;
+  margin-left: 7%;
+}
+
+#logout {
+  float: right;
+
+}
+
+li {
+  list-style: none;
+}
+
+.audioFile {
+  border: solid;
+}

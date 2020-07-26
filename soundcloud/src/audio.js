@@ -1,46 +1,29 @@
 import React, { Component } from 'react';
-import fire from './config/fire';
 
-class audio extends Component {
-  constructor() {
-    super();
-
+class Audio extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+        audio: [],
+        name: ""
+    }
     
   }
 
-  getAudio() {
-    const storageRef = fire.storage().ref();
-    // Lists all folders for each user
-    storageRef.listAll().then(function(res) {
-    res.prefixes.forEach(function(folderRef) {
-        console.log(folderRef);
-        // Gets each file from each users' folder
-        storageRef.child(folderRef.location.path).listAll().then(function(files) {
-        // Gets each file's url
-        for (var i=0; i<files.items.length; i++) {
-            files.items[i].getDownloadURL().then(url => {
-            if (fire.auth().currentUser.uid == folderRef.location.path) {
-                <audio src={url} />
-            }
-            else {
-                console.log(url);
-            }
-            
-            });
-        }
-        })
-    })
-    })
-  }
   render() {
     return (
-      <div className="App">
-        {/* <audio ref={} /> */}
-      </div>
+        <li>
+            <div className="audioFile">
+                <span>{this.props.name}</span>
+                <button className="play btn audio-element" name={this.props.name} onClick={this.props.onClick}><i className="fa fa-play" name={this.props.name}/></button>
+                <button className="pause btn audio-element" name={this.props.name} onClick={this.props.onClick}><i className="fa fa-pause" name={this.props.name}/></button>
+                <audio className="audio-element" src={this.props.src} title={this.props.name}/>
+            </div>
+        </li>
       
     );
   }
 }
 
 
-export default audio;
+export default Audio;
