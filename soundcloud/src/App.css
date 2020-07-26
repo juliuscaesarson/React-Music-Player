@@ -37,6 +37,10 @@
   }
 }
 
+.hidden {
+  display: none;
+}
+
 h1 {
   display: inline;
   margin-left: 7%;

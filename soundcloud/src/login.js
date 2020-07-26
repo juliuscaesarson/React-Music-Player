@@ -25,7 +25,7 @@ class Login extends Component {
     fire.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then((u) => {
     }).catch((error) => {
       console.log(error);
-      alert("wrong email-password combo");
+      alert("Email or Password is incorrect");
     })
   }
 

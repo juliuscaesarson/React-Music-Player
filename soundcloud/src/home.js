@@ -75,13 +75,21 @@ class Home extends Component {
 
   handleAudio(e) {
     let songName = e.target.getAttribute("name");
+    let buttons = $("button").has("[name='"+songName+"']");
+    // console.log(buttons);
     if (e.target.classList.contains("play") || e.target.classList.contains("fa-play")) {
       const audio = $("[title='"+songName+"']")[0];
       audio.play();
+      buttons[0].classList.add("hidden");
+      buttons[1].classList.remove("hidden");
+      
+
     }
     if (e.target.classList.contains("pause") || e.target.classList.contains("fa-pause")) {
       const audio = $("[title='"+songName+"']")[0];
       audio.pause();
+      buttons[1].classList.add("hidden");
+      buttons[0].classList.remove("hidden");
     }
     
 

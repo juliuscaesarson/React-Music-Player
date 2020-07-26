@@ -16,7 +16,7 @@ class Audio extends Component {
             <div className="audioFile">
                 <span>{this.props.name}</span>
                 <button className="play btn audio-element" name={this.props.name} onClick={this.props.onClick}><i className="fa fa-play" name={this.props.name}/></button>
-                <button className="pause btn audio-element" name={this.props.name} onClick={this.props.onClick}><i className="fa fa-pause" name={this.props.name}/></button>
+                <button className="pause btn audio-element hidden" name={this.props.name} onClick={this.props.onClick}><i className="fa fa-pause" name={this.props.name}/></button>
                 <audio className="audio-element" src={this.props.src} title={this.props.name}/>
             </div>
         </li>
