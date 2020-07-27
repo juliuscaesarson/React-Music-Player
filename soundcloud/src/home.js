@@ -86,10 +86,8 @@ class Home extends Component {
   } 
 
   handleAudio(e) {
-    console.log(e.target);
     let fileName = e.target.title;
-    let key = e.target.id;
-    console.log(key);
+    let key = e.target.parentElement.parentElement.id;
     const fileRef = fire.storage().ref(fire.auth().currentUser.uid + "/" + fileName);
     const db = fire.database().ref(fire.auth().currentUser.uid + "/" + key);
     db.remove().then(function() {
@@ -102,30 +100,6 @@ class Home extends Component {
     
     
   }
-
-  // handleAudio(e) {
-  //   let songName = e.target.getAttribute("name");
-  //   let buttons = $("button").has("[name='"+songName+"']");
-  //   // console.log(buttons);
-  //   if (e.target.classList.contains("play") || e.target.classList.contains("fa-play")) {
-  //     const audio = $("[title='"+songName+"']")[0];
-  //     audio.play();
-  //     buttons[0].classList.add("hidden");
-  //     buttons[1].classList.remove("hidden");
-      
-
-  //   }
-  //   if (e.target.classList.contains("pause") || e.target.classList.contains("fa-pause")) {
-  //     const audio = $("[title='"+songName+"']")[0];
-  //     audio.pause();
-  //     buttons[1].classList.add("hidden");
-  //     buttons[0].classList.remove("hidden");
-  //   }
-    
-
-  //   // const audio = document.getElementsByClassName("audio-elements")[0];
-  //   // audio.pause();
-  // }
 
   render() {
     // Code to display loading while data is being fetched from https://stackoverflow.com/questions/55359176/handling-undefined-null-properties-in-components-during-first-render
@@ -156,16 +130,16 @@ class Home extends Component {
                 // Code for conditional rendering from https://stackoverflow.com/questions/44969877/if-condition-inside-of-map-react
                   if (song.parent == fire.auth().currentUser.uid) {
                     return <React.Fragment key={index}>
-                      <li className="audioFile" name={song.user}>
+                      <li className="audioFile" id={song.key} name={song.user}>
                         <div className="songName"><span className="name">{song.name.slice(0,-4)}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
                         <Audio title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} />
-                        <Delete onClick={this.handleAudio} id={song.key} title={song.name} />
+                        <Delete onClick={this.handleAudio} title={song.name} />
                       </li>
                       </React.Fragment>
                   }
                   else {
                     return <React.Fragment key={index}>
-                      <li className="audioFile" name={song.user}>
+                      <li className="audioFile" id={song.key} name={song.user}>
                         <div className="songName"><span className="name">{song.name.slice(0,-4)}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
                         <Audio title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} />
                       </li>
