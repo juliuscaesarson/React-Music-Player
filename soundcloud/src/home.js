@@ -17,12 +17,13 @@ class Home extends Component {
     this.upload = this.upload.bind(this);
     this.onChangeFile = this.onChangeFile.bind(this);
     this.getAudio = this.getAudio.bind(this);
-    this.handleAudio = this.handleAudio.bind(this);
+    // this.handleAudio = this.handleAudio.bind(this);
 
   }
 
   componentDidMount() {
     this.setState({isLoading: true});
+    this.setState({audio:[]});
     this.getAudio();
   }
 
@@ -40,6 +41,7 @@ class Home extends Component {
 
   upload() {
     if (this.state.file != null) {
+      this.setState({audio:[]});
       const file = this.state.file[0]
       const storageRef = fire.storage().ref(fire.auth().currentUser.uid);
       const db = fire.database().ref(fire.auth().currentUser.uid);
@@ -48,7 +50,7 @@ class Home extends Component {
       // This is why I needed to use the Promise error as a condition for inserting music files
       storageRef.child(file.name).getDownloadURL().then(onResolve, onReject);
       function onResolve(foundURL) {
-        console.log("Filename already exists");
+        alert("Filename already exists");
       }
       function onReject(error) {
         // Creates a folder within the database if current user's own folder doesn't exist, but if it already exists, it will put the uploaded file into user specific directory
@@ -65,7 +67,6 @@ class Home extends Component {
         })
       }
       document.getElementById("fileUpload").value = "";
-      this.getAudio();
     }
     else {
       alert("Please select a file to upload");
@@ -73,29 +74,29 @@ class Home extends Component {
     
   } 
 
-  handleAudio(e) {
-    let songName = e.target.getAttribute("name");
-    let buttons = $("button").has("[name='"+songName+"']");
-    // console.log(buttons);
-    if (e.target.classList.contains("play") || e.target.classList.contains("fa-play")) {
-      const audio = $("[title='"+songName+"']")[0];
-      audio.play();
-      buttons[0].classList.add("hidden");
-      buttons[1].classList.remove("hidden");
+  // handleAudio(e) {
+  //   let songName = e.target.getAttribute("name");
+  //   let buttons = $("button").has("[name='"+songName+"']");
+  //   // console.log(buttons);
+  //   if (e.target.classList.contains("play") || e.target.classList.contains("fa-play")) {
+  //     const audio = $("[title='"+songName+"']")[0];
+  //     audio.play();
+  //     buttons[0].classList.add("hidden");
+  //     buttons[1].classList.remove("hidden");
       
 
-    }
-    if (e.target.classList.contains("pause") || e.target.classList.contains("fa-pause")) {
-      const audio = $("[title='"+songName+"']")[0];
-      audio.pause();
-      buttons[1].classList.add("hidden");
-      buttons[0].classList.remove("hidden");
-    }
+  //   }
+  //   if (e.target.classList.contains("pause") || e.target.classList.contains("fa-pause")) {
+  //     const audio = $("[title='"+songName+"']")[0];
+  //     audio.pause();
+  //     buttons[1].classList.add("hidden");
+  //     buttons[0].classList.remove("hidden");
+  //   }
     
 
-    // const audio = document.getElementsByClassName("audio-elements")[0];
-    // audio.pause();
-  }
+  //   // const audio = document.getElementsByClassName("audio-elements")[0];
+  //   // audio.pause();
+  // }
 
   render() {
     // Code to display loading while data is being fetched from https://stackoverflow.com/questions/55359176/handling-undefined-null-properties-in-components-during-first-render
@@ -103,7 +104,7 @@ class Home extends Component {
       return <h2>Loading...</h2>
     }
 
-    // console.log(this.state.audio)
+    console.log(this.state.audio)
     return (
       <div className="container">
         <div className="page-header">
@@ -118,8 +119,8 @@ class Home extends Component {
   
         <div className="row">
           <ul>
-              {this.state.audio.map((song) =>
-                <Audio key={song.url} name={song.name} src={song.url} onClick={this.handleAudio} />
+              {this.state.audio.map((song, index) =>
+                <Audio key={index} name={song.name} src={song.url} onClick={this.handleAudio} />
               )}
           </ul>
           
