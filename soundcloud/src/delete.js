@@ -9,7 +9,7 @@ class Delete extends Component {
   render() {
     return (
         <div className="trash" >
-            <i className="fa fa-trash fa-2x" title={this.props.title} data-key={this.props.hash} onClick={this.props.onClick}  />
+            <i className="fa fa-trash fa-2x" title={this.props.title} id={this.props.id} onClick={this.props.onClick}  />
         </div>
     );
   }

@@ -86,8 +86,9 @@ class Home extends Component {
   } 
 
   handleAudio(e) {
+    console.log(e.target);
     let fileName = e.target.title;
-    let key = e.target.dataset.key;
+    let key = e.target.id;
     console.log(key);
     const fileRef = fire.storage().ref(fire.auth().currentUser.uid + "/" + fileName);
     const db = fire.database().ref(fire.auth().currentUser.uid + "/" + key);
@@ -154,19 +155,19 @@ class Home extends Component {
               {this.state.audio.map((song, index) => {
                 // Code for conditional rendering from https://stackoverflow.com/questions/44969877/if-condition-inside-of-map-react
                   if (song.parent == fire.auth().currentUser.uid) {
-                    return <React.Fragment>
-                      <li key={index} className="audioFile" name={song.user}>
+                    return <React.Fragment key={index}>
+                      <li className="audioFile" name={song.user}>
                         <div className="songName"><span className="name">{song.name.slice(0,-4)}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
-                        <Audio title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} hash={song.key} />
-                        <Delete />
+                        <Audio title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} />
+                        <Delete onClick={this.handleAudio} id={song.key} title={song.name} />
                       </li>
                       </React.Fragment>
                   }
                   else {
-                    return <React.Fragment>
-                      <li key={index} className="audioFile" name={song.user}>
+                    return <React.Fragment key={index}>
+                      <li className="audioFile" name={song.user}>
                         <div className="songName"><span className="name">{song.name.slice(0,-4)}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
-                        <Audio title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} hash={song.key} />
+                        <Audio title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} />
                       </li>
                       </React.Fragment>
                   }
