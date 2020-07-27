@@ -155,18 +155,18 @@ class Home extends Component {
                 // Code for conditional rendering from https://stackoverflow.com/questions/44969877/if-condition-inside-of-map-react
                   if (song.parent == fire.auth().currentUser.uid) {
                     return <React.Fragment>
-                      <li className="audioFile" name={song.user}>
+                      <li key={index} className="audioFile" name={song.user}>
                         <div className="songName"><span className="name">{song.name.slice(0,-4)}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
-                        <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} hash={song.key} />
+                        <Audio title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} hash={song.key} />
                         <Delete />
                       </li>
                       </React.Fragment>
                   }
                   else {
                     return <React.Fragment>
-                      <li className="audioFile" name={song.user}>
+                      <li key={index} className="audioFile" name={song.user}>
                         <div className="songName"><span className="name">{song.name.slice(0,-4)}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
-                        <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} hash={song.key} />
+                        <Audio title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} hash={song.key} />
                       </li>
                       </React.Fragment>
                   }

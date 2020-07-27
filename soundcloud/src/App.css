@@ -51,8 +51,13 @@ h1 {
 
 }
 
+#fileUpload {
+  margin-left: 43%;
+  padding-bottom: 15px;
+}
+
 ul {
-  overflow-x: auto;
+  margin-top:15px;
 }
 
 li {
@@ -60,12 +65,12 @@ li {
   border: solid;
   display: flex;
   width: 100%;
+  overflow-x:scroll;
 }
 
 
 .songName {
   width:700px;
-  
 }
 .name {
   font-size: 25px;
@@ -75,8 +80,9 @@ li {
 }
 
 .player {
-  margin-top:6px;
+  margin-top:.5%;
 }
+
 .trash {
   width:100px;
   margin-top:19px;
