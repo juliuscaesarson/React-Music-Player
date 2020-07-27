@@ -58,3 +58,7 @@ li {
 .audioFile {
   border: solid;
 }
+
+.fa-trash {
+  cursor: pointer;
+}

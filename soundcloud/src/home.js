@@ -10,20 +10,21 @@ class Home extends Component {
     this.state = {
       file: null,
       audio: [],
-      isLoading: false
+      isLoading: false,
+      isUploading: false,
+
     }
     // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
     this.logout = this.logout.bind(this);
     this.upload = this.upload.bind(this);
     this.onChangeFile = this.onChangeFile.bind(this);
     this.getAudio = this.getAudio.bind(this);
-    // this.handleAudio = this.handleAudio.bind(this);
+
 
   }
 
   componentDidMount() {
     this.setState({isLoading: true});
-    this.setState({audio:[]});
     this.getAudio();
   }
 
@@ -41,7 +42,9 @@ class Home extends Component {
 
   upload() {
     if (this.state.file != null) {
-      this.setState({audio:[]});
+      this.setState({isUploading: true});
+      this.setState({audio: []});
+      const current = this;
       const file = this.state.file[0]
       const storageRef = fire.storage().ref(fire.auth().currentUser.uid);
       const db = fire.database().ref(fire.auth().currentUser.uid);
@@ -56,13 +59,19 @@ class Home extends Component {
         // Creates a folder within the database if current user's own folder doesn't exist, but if it already exists, it will put the uploaded file into user specific directory
         const fileRef = storageRef.child(file.name);
         fileRef.put(file).then(() => {
+          // console.log(current.state.audio);
+          current.setState({isUploading:true});
           console.log("Uploaded file: " + file.name);
           storageRef.child(file.name).getDownloadURL().then(url => {
             let newPostKey = db.push().key;
             db.child(newPostKey).set({
                 name : file.name,
-                url : url
+                url : url,
+                key : newPostKey,
+                user : fire.auth().currentUser.uid
             });
+            console.log(current.state.audio);
+            current.setState({isUploading:false});
           })
         })
       }
@@ -73,6 +82,23 @@ class Home extends Component {
     }
     
   } 
+
+  handleAudio(e) {
+    let fileName = e.target.title;
+    let key = e.target.dataset.key;
+    console.log(key);
+    const fileRef = fire.storage().ref(fire.auth().currentUser.uid + "/" + fileName);
+    const db = fire.database().ref(fire.auth().currentUser.uid + "/" + key);
+    db.remove().then(function() {
+      fileRef.delete().then(function() {
+        alert("File Deleted!");
+      })
+    }).catch(function(error) {
+      console.log("Remove failed: " + error.message);
+    });
+    
+    
+  }
 
   // handleAudio(e) {
   //   let songName = e.target.getAttribute("name");
@@ -103,8 +129,11 @@ class Home extends Component {
     if (this.state.isLoading) {
       return <h2>Loading...</h2>
     }
+    if (this.state.isUploading) {
+      return <h2>Uploading...</h2>
+    }
 
-    console.log(this.state.audio)
+    console.log(this.state.audio);
     return (
       <div className="container">
         <div className="page-header">
@@ -119,9 +148,10 @@ class Home extends Component {
   
         <div className="row">
           <ul>
-              {this.state.audio.map((song, index) =>
-                <Audio key={index} name={song.name} src={song.url} onClick={this.handleAudio} />
+              {this.state.audio.map((song, index) => 
+                    <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.user} hash={song.key} />
               )}
+            
           </ul>
           
         </div>
@@ -131,19 +161,21 @@ class Home extends Component {
 
   // Lists all music files regardless of user
   getAudio() {
-    let audio = [];
     let current = this;
     fire.database().ref().on("value", function(snapshot) {
+      let audio = [];
+      // console.log(audio);
       snapshot.forEach(function(child) {
         child.forEach(function(file) {
-          // console.log(file.val());
-          audio.push({name: file.val().name, url: file.val().url})
+          audio.push({name: file.val().name, url: file.val().url, key: file.val().key, user: file.val().user})
+          // console.log(current.state.audio);
           current.setState({audio: audio});
           // console.log(audio);
           current.setState({isLoading: false});
         })
 
       })
+      
     });
 
   }
