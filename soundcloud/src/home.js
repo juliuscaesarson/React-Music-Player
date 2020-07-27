@@ -54,6 +54,7 @@ class Home extends Component {
       storageRef.child(file.name).getDownloadURL().then(onResolve, onReject);
       function onResolve(foundURL) {
         alert("Filename already exists");
+        this.setState({isUploading: false});
       }
       function onReject(error) {
         // Creates a folder within the database if current user's own folder doesn't exist, but if it already exists, it will put the uploaded file into user specific directory
@@ -68,7 +69,8 @@ class Home extends Component {
                 name : file.name,
                 url : url,
                 key : newPostKey,
-                user : fire.auth().currentUser.uid
+                parent : fire.auth().currentUser.uid,
+                user : fire.auth().currentUser.email
             });
             console.log(current.state.audio);
             current.setState({isUploading:false});
@@ -151,11 +153,11 @@ class Home extends Component {
             
               {this.state.audio.map((song, index) => {
                 // Code for conditional rendering from https://stackoverflow.com/questions/44969877/if-condition-inside-of-map-react
-                  if (song.user == fire.auth().currentUser.uid) {
+                  if (song.parent == fire.auth().currentUser.uid) {
                     return <React.Fragment>
                       <li className="audioFile" name={song.user}>
-                        <div className="songName">{song.name.slice(0,-4)}</div>
-                        <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.user} hash={song.key} />
+                        <div className="songName"><span className="name">{song.name.slice(0,-4)}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
+                        <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} hash={song.key} />
                         <Delete />
                       </li>
                       </React.Fragment>
@@ -163,8 +165,8 @@ class Home extends Component {
                   else {
                     return <React.Fragment>
                       <li className="audioFile" name={song.user}>
-                        <div className="songName">{song.name.slice(0,-4)}</div>
-                        <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.user} hash={song.key} />
+                        <div className="songName"><span className="name">{song.name.slice(0,-4)}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
+                        <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.parent} hash={song.key} />
                       </li>
                       </React.Fragment>
                   }
@@ -187,7 +189,7 @@ class Home extends Component {
       // console.log(audio);
       snapshot.forEach(function(child) {
         child.forEach(function(file) {
-          audio.push({name: file.val().name, url: file.val().url, key: file.val().key, user: file.val().user})
+          audio.push({name: file.val().name, url: file.val().url, key: file.val().key, parent: file.val().parent, user: file.val().user})
           // console.log(current.state.audio);
           current.setState({audio: audio});
           // console.log(audio);

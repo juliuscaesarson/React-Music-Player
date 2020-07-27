@@ -57,15 +57,29 @@ ul {
 
 li {
   list-style: none;
-
+  border: solid;
+  display: flex;
+  width: 100%;
 }
+
 
 .songName {
-  font-size: 20px;
+  width:700px;
+  
+}
+.name {
+  font-size: 25px;
+}
+.uploadedBy {
+  font-size: 15px;
 }
 
-.audioFile {
-  border: solid;
+.player {
+  margin-top:6px;
+}
+.trash {
+  width:100px;
+  margin-top:19px;
 }
 
 .fa-trash {
