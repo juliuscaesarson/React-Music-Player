@@ -3,6 +3,7 @@ import fire from './config/fire';
 import './App.css';
 import Audio from './audio';
 import $ from 'jquery';
+import Delete from './delete';
 
 class Home extends Component {
   constructor(props) {
@@ -43,7 +44,6 @@ class Home extends Component {
   upload() {
     if (this.state.file != null) {
       this.setState({isUploading: true});
-      this.setState({audio: []});
       const current = this;
       const file = this.state.file[0]
       const storageRef = fire.storage().ref(fire.auth().currentUser.uid);
@@ -148,10 +148,30 @@ class Home extends Component {
   
         <div className="row">
           <ul>
-              {this.state.audio.map((song, index) => 
-                    <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.user} hash={song.key} />
-              )}
             
+              {this.state.audio.map((song, index) => {
+                // Code for conditional rendering from https://stackoverflow.com/questions/44969877/if-condition-inside-of-map-react
+                  if (song.user == fire.auth().currentUser.uid) {
+                    return <React.Fragment>
+                      <li className="audioFile" name={song.user}>
+                        <div className="songName">{song.name.slice(0,-4)}</div>
+                        <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.user} hash={song.key} />
+                        <Delete />
+                      </li>
+                      </React.Fragment>
+                  }
+                  else {
+                    return <React.Fragment>
+                      <li className="audioFile" name={song.user}>
+                        <div className="songName">{song.name.slice(0,-4)}</div>
+                        <Audio key={index} title={song.name} src={song.url} onClick={this.handleAudio} user={song.user} hash={song.key} />
+                      </li>
+                      </React.Fragment>
+                  }
+                    
+                })
+              }
+              
           </ul>
           
         </div>
