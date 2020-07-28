@@ -224,6 +224,7 @@ class Home extends Component {
                       <li className="audioFile" id={song.key} name={song.name}>
                         <div className="songName"><span className="name">{song.name}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
                         <Audio title={song.name} src={song.url} user={song.parent} />
+                        <div className="empty" />
                       </li>
                       </React.Fragment>
                   }

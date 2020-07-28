@@ -55,7 +55,7 @@ li {
   margin-top:.5%;
 }
 
-.trash {
+.trash, .empty {
   width:100px;
   margin-top:19px;
 }
