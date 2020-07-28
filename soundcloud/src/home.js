@@ -3,6 +3,7 @@ import fire from './config/fire';
 import './App.css';
 import Audio from './audio';
 import Delete from './delete';
+import Like from './like';
 
 class Home extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Home extends Component {
       audio: [],
       isLoading: false,
       isUploading: false,
-
+      likes:[]
     }
     // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
     // Bind all functions to this
@@ -24,6 +25,8 @@ class Home extends Component {
     this.delete = this.delete.bind(this);
     this.edit = this.edit.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.like = this.like.bind(this);
+
 
   }
 
@@ -32,6 +35,7 @@ class Home extends Component {
     this.setState({isLoading: true});
     // Gets all music files to display on page
     this.getAudio();
+
   }
 
   logout() {
@@ -44,7 +48,6 @@ class Home extends Component {
     this.setState({
       file
     })
-    // console.log(file[0].name);
   }
 
   upload() {
@@ -171,7 +174,36 @@ class Home extends Component {
       console.log("Remove db failed: " + error.message);
     });
     
-    
+  }
+
+  like(e) {
+    let fileName = e.target.title;
+    let key = e.target.parentElement.parentElement.id;
+    let songName = e.target.parentElement.parentElement.getAttribute("name");
+    const db = fire.database().ref("likes/" + key);
+    // Check if it hasnt been liked yet, then like it
+    if (e.target.classList.contains("fa-thumbs-o-up")) {
+      e.target.classList.remove("fa-thumbs-o-up");
+      e.target.classList.add("fa-thumbs-up");
+      db.child(fire.auth().currentUser.uid).set(songName).then(function() {
+        console.log("Liked");
+      }).catch(function(error) {
+        console.log("Cannot like: " + error.message);
+      });
+
+    }
+    // If it has already been liked by user, unlike
+    else {
+      e.target.classList.remove("fa-thumbs-up");
+      e.target.classList.add("fa-thumbs-o-up");
+      db.child(fire.auth().currentUser.uid).remove().then(function() {
+        console.log("Unliked");
+      }).catch(function(error) {
+        console.log("Cannot unlike: " + error.message);
+      })
+    }
+
+
   }
 
   render() {
@@ -184,7 +216,6 @@ class Home extends Component {
       return <h2>Uploading...</h2>
     }
 
-    console.log(this.state.audio);
     return (
       <div className="container">
         {/* Main title and logout button */}
@@ -204,8 +235,10 @@ class Home extends Component {
               {this.state.audio.map((song, index) => {
                 // Code for conditional rendering from https://stackoverflow.com/questions/44969877/if-condition-inside-of-map-react
                   if (song.parent === fire.auth().currentUser.uid) {
-                    return <React.Fragment key={index}>
+                    if (this.state.likes[index] === undefined) {
+                      return <React.Fragment key={index}>
                       <li className="audioFile" id={song.key} name={song.name}>
+                        <Like title={song.name} onClick={this.like} numLikes={0} />
                         <div className="songName">
                           <span className="name" onClick={this.handleEdit}>{song.name}</span>
                           <input className="editName hidden" type="text" defaultValue={song.name}/>
@@ -220,16 +253,51 @@ class Home extends Component {
                         <Delete onClick={this.delete} title={song.original} />
                       </li>
                       </React.Fragment>
+                    }
+                    else {
+                      return <React.Fragment key={index}>
+                      <li className="audioFile" id={song.key} name={song.name}>
+                        <Like title={song.name} onClick={this.like} numLikes={this.state.likes[index].likes.length} />
+                        <div className="songName">
+                          <span className="name" onClick={this.handleEdit}>{song.name}</span>
+                          <input className="editName hidden" type="text" defaultValue={song.name}/>
+                          <i className="fa fa-edit hidden" onClick={this.edit} title={song.name}/>
+                          <i className="fa fa-times hidden" onClick={this.edit} />
+                          <br/>
+                          <span className="uploadedBy">Uploaded by: {song.user}</span>
+                        </div>
+                        {/* Audio player component */}
+                        <Audio title={song.name} src={song.url} user={song.parent} />
+                        {/* Delete button component */}
+                        <Delete onClick={this.delete} title={song.original} />
+                      </li>
+                      </React.Fragment>
+                    }
                   }
                   else {
-                    // Returns the music file without edit or delete function because user does not own these files 
-                    return <React.Fragment key={index}>
+                    if (this.state.likes[index] === undefined) {
+                      // Returns the music file without edit or delete function because user does not own these files 
+                      return <React.Fragment key={index}>
                       <li className="audioFile" id={song.key} name={song.name}>
+                        <Like title={song.name} onClick={this.like} numLikes={0} />
                         <div className="songName"><span className="name">{song.name}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
                         <Audio title={song.name} src={song.url} user={song.parent} />
                         <div className="empty" />
                       </li>
                       </React.Fragment>
+                    }  
+                    else {
+                      // Returns the music file without edit or delete function because user does not own these files 
+                      return <React.Fragment key={index}>
+                      <li className="audioFile" id={song.key} name={song.name}>
+                        <Like title={song.name} onClick={this.like} numLikes={this.state.likes[index].likes.length}/>
+                        <div className="songName"><span className="name">{song.name}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
+                        <Audio title={song.name} src={song.url} user={song.parent} />
+                        <div className="empty" />
+                      </li>
+                      </React.Fragment>
+                    }
+                    
                   }
                     
                 })
@@ -248,8 +316,8 @@ class Home extends Component {
     // Iterates through each user's database and gets information about every music file
     fire.database().ref("users").on("value", function(snapshot) {
       let audio = [];
-      snapshot.forEach(function(child) {
-        child.forEach(function(file) {
+      snapshot.forEach(function(users) {
+        users.forEach(function(file) {
           // Pushes each music file's info into array audio
           audio.push({name: file.val().name, url: file.val().url, key: file.val().key, parent: file.val().parent, user: file.val().user, original: file.val().original});
           // Sets state with new info
@@ -257,10 +325,24 @@ class Home extends Component {
         })
 
       })
-      current.setState({isLoading: false});
+      // This function gets an array of who liked which music
+      fire.database().ref("likes").on("value", function(snapshot) {
+        let likes = [];
+        snapshot.forEach(function(file) {
+          // Pushes the user who liked the music into the array
+          likes.push({key: file.key, likes: Object.keys(file.val())});
+          console.log(likes);
+          // Set state
+          current.setState({likes: likes});
+        })
+        console.log(current.state.likes);
+        console.log(current.state.audio);
+        current.setState({isLoading: false});
+      });
     });
 
   }
+
 }
 
 export default Home;

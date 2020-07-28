@@ -56,12 +56,19 @@ li {
   margin-top:.5%;
 }
 
-.trash, .empty {
+.trash, .empty, .like {
   width:100px;
   margin-top:19px;
 }
 
-.fa-trash, .fa-edit, .fa-times {
+.like {
+  padding-left: 20px;
+}
+
+.fa-trash, .fa-edit, .fa-times, .fa-thumbs-up, .fa-thumbs-o-up {
   cursor: pointer;
 }
 
+.numLikes {
+  margin-left: 5px;
+}
