@@ -167,7 +167,7 @@ class Home extends Component {
     // Removes the reference in the database and then removes the file from the storage
     db.remove().then(function() {
       fileRef.delete().then(function() {
-        alert("File Deleted!");
+        console.log("File Deleted!");
       }).catch(function(error) {
         console.log("Remove file failed: " + error.message)
       })
