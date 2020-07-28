@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 
-class Like extends Component {
+class Liked extends Component {
   render() {
-    // Like button 
+    // Liked button 
     return (
         <div className="like" >
             <span className="numLikes">{this.props.numLikes}</span>
-            <i className="fa fa-thumbs-o-up fa-2x" title={this.props.title} onClick={this.props.onClick}  />
+            <i className="fa fa-thumbs-up fa-2x" title={this.props.title} onClick={this.props.onClick}  />
         </div>
     );
   }
 }
 
 
-export default Like;
+export default Liked;
 

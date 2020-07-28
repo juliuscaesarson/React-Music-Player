@@ -4,6 +4,7 @@ import './App.css';
 import Audio from './audio';
 import Delete from './delete';
 import Like from './like';
+import Liked from './liked';
 
 class Home extends Component {
   constructor(props) {
@@ -234,8 +235,10 @@ class Home extends Component {
             {/* List of music files that will be displayed with titles, user who uploaded it, a music player with mutliple functions, and an edit or delete function for user's own music files */}
               {this.state.audio.map((song, index) => {
                 // Code for conditional rendering from https://stackoverflow.com/questions/44969877/if-condition-inside-of-map-react
+                // Checks if logged in user owns these files
                   if (song.parent === fire.auth().currentUser.uid) {
-                    if (this.state.likes[index] === undefined) {
+                    // Check if anyone liked this song
+                    if (this.state.likes[song.key] === undefined) {
                       return <React.Fragment key={index}>
                       <li className="audioFile" id={song.key} name={song.name}>
                         <Like title={song.name} onClick={this.like} numLikes={0} />
@@ -255,27 +258,54 @@ class Home extends Component {
                       </React.Fragment>
                     }
                     else {
-                      return <React.Fragment key={index}>
-                      <li className="audioFile" id={song.key} name={song.name}>
-                        <Like title={song.name} onClick={this.like} numLikes={this.state.likes[index].likes.length} />
-                        <div className="songName">
-                          <span className="name" onClick={this.handleEdit}>{song.name}</span>
-                          <input className="editName hidden" type="text" defaultValue={song.name}/>
-                          <i className="fa fa-edit hidden" onClick={this.edit} title={song.name}/>
-                          <i className="fa fa-times hidden" onClick={this.edit} />
-                          <br/>
-                          <span className="uploadedBy">Uploaded by: {song.user}</span>
-                        </div>
-                        {/* Audio player component */}
-                        <Audio title={song.name} src={song.url} user={song.parent} />
-                        {/* Delete button component */}
-                        <Delete onClick={this.delete} title={song.original} />
-                      </li>
-                      </React.Fragment>
+                      // Check if currently logged in user liked this song so it can render with the like button already clicked
+                      if (this.state.likes[song.key].includes(fire.auth().currentUser.uid)) {
+                        return <React.Fragment key={index}>
+                        <li className="audioFile" id={song.key} name={song.name}>
+                          <Liked title={song.name} onClick={this.like} numLikes={this.state.likes[song.key].length} />
+                          <div className="songName">
+                            <span className="name" onClick={this.handleEdit}>{song.name}</span>
+                            <input className="editName hidden" type="text" defaultValue={song.name}/>
+                            <i className="fa fa-edit hidden" onClick={this.edit} title={song.name}/>
+                            <i className="fa fa-times hidden" onClick={this.edit} />
+                            <br/>
+                            <span className="uploadedBy">Uploaded by: {song.user}</span>
+                          </div>
+                          {/* Audio player component */}
+                          <Audio title={song.name} src={song.url} user={song.parent} />
+                          {/* Delete button component */}
+                          <Delete onClick={this.delete} title={song.original} />
+                        </li>
+                        </React.Fragment>
+                      }
+                      // Renders without like button being clicked
+                      else {
+                        return <React.Fragment key={index}>
+                        <li className="audioFile" id={song.key} name={song.name}>
+                          <Like title={song.name} onClick={this.like} numLikes={this.state.likes[song.key].length} />
+                          <div className="songName">
+                            <span className="name" onClick={this.handleEdit}>{song.name}</span>
+                            <input className="editName hidden" type="text" defaultValue={song.name}/>
+                            <i className="fa fa-edit hidden" onClick={this.edit} title={song.name}/>
+                            <i className="fa fa-times hidden" onClick={this.edit} />
+                            <br/>
+                            <span className="uploadedBy">Uploaded by: {song.user}</span>
+                          </div>
+                          {/* Audio player component */}
+                          <Audio title={song.name} src={song.url} user={song.parent} />
+                          {/* Delete button component */}
+                          <Delete onClick={this.delete} title={song.original} />
+                        </li>
+                        </React.Fragment>
+                      }
+                        
+                      
                     }
                   }
+                  // Renders music without option to edit or delete
                   else {
-                    if (this.state.likes[index] === undefined) {
+                    // Check if anyone has already liked this song
+                    if (this.state.likes[song.key] === undefined) {
                       // Returns the music file without edit or delete function because user does not own these files 
                       return <React.Fragment key={index}>
                       <li className="audioFile" id={song.key} name={song.name}>
@@ -287,15 +317,31 @@ class Home extends Component {
                       </React.Fragment>
                     }  
                     else {
-                      // Returns the music file without edit or delete function because user does not own these files 
-                      return <React.Fragment key={index}>
-                      <li className="audioFile" id={song.key} name={song.name}>
-                        <Like title={song.name} onClick={this.like} numLikes={this.state.likes[index].likes.length}/>
-                        <div className="songName"><span className="name">{song.name}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
-                        <Audio title={song.name} src={song.url} user={song.parent} />
-                        <div className="empty" />
-                      </li>
-                      </React.Fragment>
+                      // Check if currently logged in user has liked this song before so it can render like button already clicked
+                      if (this.state.likes[song.key].includes(fire.auth().currentUser.uid)) {
+                        // Returns the music file without edit or delete function because user does not own these files 
+                        return <React.Fragment key={index}>
+                        <li className="audioFile" id={song.key} name={song.name}>
+                          <Liked title={song.name} onClick={this.like} numLikes={this.state.likes[song.key].length}/>
+                          <div className="songName"><span className="name">{song.name}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
+                          <Audio title={song.name} src={song.url} user={song.parent} />
+                          <div className="empty" />
+                        </li>
+                        </React.Fragment>
+                      }
+                      else {
+                        // Returns the music file without edit or delete function because user does not own these files 
+                        return <React.Fragment key={index}>
+                        <li className="audioFile" id={song.key} name={song.name}>
+                          <Like title={song.name} onClick={this.like} numLikes={this.state.likes[song.key].length}/>
+                          <div className="songName"><span className="name">{song.name}</span><br/><span className="uploadedBy">Uploaded by: {song.user}</span></div>
+                          <Audio title={song.name} src={song.url} user={song.parent} />
+                          <div className="empty" />
+                        </li>
+                        </React.Fragment>
+                      }
+                        
+                      
                     }
                     
                   }
@@ -327,10 +373,10 @@ class Home extends Component {
       })
       // This function gets an array of who liked which music
       fire.database().ref("likes").on("value", function(snapshot) {
-        let likes = [];
+        let likes = {};
         snapshot.forEach(function(file) {
-          // Pushes the user who liked the music into the array
-          likes.push({key: file.key, likes: Object.keys(file.val())});
+          // Sets music key as dictionary key with array of users as values
+          likes[file.key] = Object.keys(file.val())});
           console.log(likes);
           // Set state
           current.setState({likes: likes});
@@ -339,10 +385,7 @@ class Home extends Component {
         console.log(current.state.audio);
         current.setState({isLoading: false});
       });
-    });
-
-  }
-
+    };
 }
 
 export default Home;
