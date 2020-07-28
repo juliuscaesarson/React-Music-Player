@@ -57,7 +57,7 @@ class Home extends Component {
       // Set storage and database references using currently logged in user's uid
       // Creates a user's folder within the database if current user's own folder doesn't exist, but if it already exists, it will put the uploaded file into the user specific directory
       const storageRef = fire.storage().ref(fire.auth().currentUser.uid);
-      const db = fire.database().ref(fire.auth().currentUser.uid);
+      const db = fire.database().ref("users/" + fire.auth().currentUser.uid);
       // Checks to see if file name already exists in user's folder
       // Because Firebase API can only request a file that exists, checking for a non-existent file is handled as an error
       // This is why a Promise error is needed as a condition for inserting music files
@@ -78,13 +78,14 @@ class Home extends Component {
           storageRef.child(file.name).getDownloadURL().then(url => {
             // Generates a new key for the doc that is about to be uploaded from Firebase documentation
             let newPostKey = db.push().key;
-            // Set database doc with name, url, key, parent, and user
+            // Set database doc with name, url, key, parent, user, and original
             db.child(newPostKey).set({
                 name : file.name.substring(0,file.name.lastIndexOf('.')),
                 url : url,
                 key : newPostKey,
                 parent : fire.auth().currentUser.uid,
-                user : fire.auth().currentUser.email
+                user : fire.auth().currentUser.email,
+                original : file.name
             });
             // console.log(current.state.audio);
             current.setState({isUploading:false});
@@ -121,7 +122,7 @@ class Home extends Component {
       // Gets the new name for the song from the input element
       let fileName = e.target.previousElementSibling.value;
       // Set database reference to user specific folder and song that wants to be edited
-      let db = fire.database().ref(fire.auth().currentUser.uid + "/" + key);
+      let db = fire.database().ref("users/" + fire.auth().currentUser.uid + "/" + key);
       // Sets the key "name" with the new song name 
       db.child("name").set(fileName).then(function() {
         console.log("File renamed");
@@ -158,14 +159,16 @@ class Home extends Component {
     let key = e.target.parentElement.parentElement.id;
     // Sets database and storage reference
     const fileRef = fire.storage().ref(fire.auth().currentUser.uid + "/" + fileName);
-    const db = fire.database().ref(fire.auth().currentUser.uid + "/" + key);
+    const db = fire.database().ref("users/" + fire.auth().currentUser.uid + "/" + key);
     // Removes the reference in the database and then removes the file from the storage
     db.remove().then(function() {
       fileRef.delete().then(function() {
         alert("File Deleted!");
+      }).catch(function(error) {
+        console.log("Remove file failed: " + error.message)
       })
     }).catch(function(error) {
-      console.log("Remove failed: " + error.message);
+      console.log("Remove db failed: " + error.message);
     });
     
     
@@ -214,7 +217,7 @@ class Home extends Component {
                         {/* Audio player component */}
                         <Audio title={song.name} src={song.url} user={song.parent} />
                         {/* Delete button component */}
-                        <Delete onClick={this.delete} title={song.name} />
+                        <Delete onClick={this.delete} title={song.original} />
                       </li>
                       </React.Fragment>
                   }
@@ -243,12 +246,12 @@ class Home extends Component {
   getAudio() {
     let current = this;
     // Iterates through each user's database and gets information about every music file
-    fire.database().ref().on("value", function(snapshot) {
+    fire.database().ref("users").on("value", function(snapshot) {
       let audio = [];
       snapshot.forEach(function(child) {
         child.forEach(function(file) {
           // Pushes each music file's info into array audio
-          audio.push({name: file.val().name, url: file.val().url, key: file.val().key, parent: file.val().parent, user: file.val().user});
+          audio.push({name: file.val().name, url: file.val().url, key: file.val().key, parent: file.val().parent, user: file.val().user, original: file.val().original});
           // Sets state with new info
           current.setState({audio: audio});
         })
