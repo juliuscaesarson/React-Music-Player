@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import fire from './config/fire';
 import './App.css';
 import Audio from './audio';
-import $ from 'jquery';
+// import $ from 'jquery';
 import Delete from './delete';
 
 class Home extends Component {

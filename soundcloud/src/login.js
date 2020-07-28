@@ -44,18 +44,18 @@ class Login extends Component {
        <div className="col-md-10">
           <form>
             <div className="form">
-              <label htmlFor="emailInput">Email Address</label>
-              <input value={this.state.email} onChange={this.handleChange} type="email" name="email" id="emailInput"placeholder="Enter Email Address" />
+              <label htmlFor="emailInput">Email Address </label>
+              <input value={this.state.email} onChange={this.handleChange} type="email" name="email" id="emailInput" />
             </div>
-            <div className="form-group">
-              <label htmlFor="passInput">Password</label>
-              <input value={this.state.password} onChange={this.handleChange} type="password" name="password" id="passInput" placeholder="Enter Password" />
+            <div className="form">
+              <label htmlFor="passInput">Password </label>
+              <input value={this.state.password} onChange={this.handleChange} type="password" name="password" id="passInput" />
             </div>
             <button type="submit" onClick={this.login} className="btn btn-primary">Login</button>
             <button onClick={this.signup} className="btn btn-success">Signup</button>
-        </form>
+          </form>
  
- </div>
+        </div>
     );
   }
 }

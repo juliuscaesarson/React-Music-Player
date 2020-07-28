@@ -51,6 +51,13 @@ h1 {
 
 }
 
+form {
+  margin-top:80px;
+}
+input {
+  margin:10px;
+}
+
 #fileUpload {
   margin-left: 43%;
   padding-bottom: 15px;
