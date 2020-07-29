@@ -183,7 +183,6 @@ class Home extends Component {
   }
 
   like(e) {
-    let fileName = e.target.title;
     let key = e.target.parentElement.parentElement.id;
     let songName = e.target.parentElement.parentElement.getAttribute("name");
     const db = fire.database().ref("likes/" + key);
