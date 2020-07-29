@@ -1,10 +1,13 @@
 .App {
   text-align: center;
+  height: 100vh;
+  background-color: lightblue;
 }
 
 .hidden {
   display: none;
 }
+
 
 h1 {
   display: inline;
@@ -35,10 +38,14 @@ ul {
 
 li {
   list-style: none;
-  border: solid;
+  background-color: white;
+  border: 2px transparent;
+  border-radius:5px;
   display: flex;
   width: 100%;
   overflow-x:scroll;
+  margin-bottom: 5px;
+
 }
 
 
