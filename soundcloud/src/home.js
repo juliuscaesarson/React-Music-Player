@@ -245,7 +245,7 @@ class Home extends Component {
         </div >
         {/* Upload file elements */}
         <div className="row">
-          <input type="text" id="search" defaultValue="" onChange={this.handleSearch} placeholder="Search" />
+          <input type="text" id="search" defaultValue="" onChange={this.handleSearch} placeholder="    Search" />
           <input type="file" id="fileUpload" onChange={(e) => {this.onChangeFile(e.target.files)}} />
           <button onClick={this.upload} className="btn btn-primary">Upload</button>
         </div>

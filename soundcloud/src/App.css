@@ -26,6 +26,24 @@ input {
   margin:10px;
 }
 
+#search {
+  width:100%;
+  background-image: url('searchicon.png');
+  background-size: 30px;
+  background-repeat: no-repeat;
+  background-position: 1%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+#search:focus {
+  background-image: none;
+
+}
+#search:focus::placeholder {
+  color: transparent;
+}
+
 #fileUpload {
   margin-left: 43%;
   padding-bottom: 15px;
