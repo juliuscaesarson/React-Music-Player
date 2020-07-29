@@ -5,6 +5,7 @@ import Audio from './audio';
 import Delete from './delete';
 import Like from './like';
 import Liked from './liked';
+import $ from 'jquery';
 
 class Home extends Component {
   constructor(props) {
@@ -15,7 +16,8 @@ class Home extends Component {
       audio: [],
       isLoading: false,
       isUploading: false,
-      likes:[]
+      likes:[],
+      filtered: [],
     }
     // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
     // Bind all functions to this
@@ -27,8 +29,7 @@ class Home extends Component {
     this.edit = this.edit.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
     this.like = this.like.bind(this);
-
-
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   componentDidMount() {
@@ -207,8 +208,20 @@ class Home extends Component {
         console.log("Cannot unlike: " + error.message);
       })
     }
+  }
 
+  handleSearch(e) {
+    // Gets the input value in the search bar dynamically
+    let search = $("#search").val();
+    // Sets state of filtered from this.state.audio with song names that only match the search query
+    // Code from https://stackoverflow.com/questions/36326612/delete-item-from-state-array-in-react
+    this.setState({
+      filtered: this.state.audio.filter(function(song) { 
+        if (song.name.toLowerCase().includes(search)) {
+          return song
+        }
 
+    })});
   }
 
   render() {
@@ -221,6 +234,8 @@ class Home extends Component {
       return <h2>Uploading...</h2>
     }
 
+    // console.log(this.state.audio);
+    // console.log(this.state.filtered);
     return (
       <div className="container">
         {/* Main title and logout button */}
@@ -230,6 +245,7 @@ class Home extends Component {
         </div >
         {/* Upload file elements */}
         <div className="row">
+          <input type="text" id="search" defaultValue="" onChange={this.handleSearch} placeholder="Search" />
           <input type="file" id="fileUpload" onChange={(e) => {this.onChangeFile(e.target.files)}} />
           <button onClick={this.upload} className="btn btn-primary">Upload</button>
         </div>
@@ -237,7 +253,7 @@ class Home extends Component {
         <div className="row">
           <ul>
             {/* List of music files that will be displayed with titles, user who uploaded it, a music player with mutliple functions, and an edit or delete function for user's own music files */}
-              {this.state.audio.map((song, index) => {
+              {this.state.filtered.map((song, index) => {
                 // Code for conditional rendering from https://stackoverflow.com/questions/44969877/if-condition-inside-of-map-react
                 // Checks if logged in user owns these files
                   if (song.parent === fire.auth().currentUser.uid) {
@@ -360,7 +376,7 @@ class Home extends Component {
     );
   }
 
-  // Lists all music files regardless of current user
+  // Lists all music files and likes regardless of current user
   getAudio() {
     let current = this;
     // Iterates through each user's database and gets information about every music file
@@ -372,6 +388,7 @@ class Home extends Component {
           audio.push({name: file.val().name, url: file.val().url, key: file.val().key, parent: file.val().parent, user: file.val().user, original: file.val().original});
           // Sets state with new info
           current.setState({audio: audio});
+          current.setState({filtered: audio});
         })
 
       })

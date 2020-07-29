@@ -52,7 +52,7 @@ class Login extends Component {
               <input value={this.state.password} onChange={this.handleChange} type="password" name="password" id="passInput" />
             </div>
             <button type="submit" onClick={this.login} className="btn btn-primary">Login</button>
-            <button onClick={this.signup} className="btn btn-success">Signup</button>
+            <button onClick={this.signup} className="btn btn-success">Register</button>
           </form>
  
         </div>
