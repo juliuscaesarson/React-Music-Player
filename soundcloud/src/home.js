@@ -174,6 +174,11 @@ class Home extends Component {
     }).catch(function(error) {
       console.log("Remove db failed: " + error.message);
     });
+    fire.database().ref("likes/" + key).remove().then(function() {
+      console.log("Likes removed");
+    }).catch(function(error) {
+      console.log("Remove likes failed: " + error.message);
+    })
     
   }
 
