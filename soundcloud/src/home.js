@@ -381,12 +381,12 @@ class Home extends Component {
         snapshot.forEach(function(file) {
           // Sets music key as dictionary key with array of users as values
           likes[file.key] = Object.keys(file.val())});
-          console.log(likes);
+          // console.log(likes);
           // Set state
           current.setState({likes: likes});
         })
-        console.log(current.state.likes);
-        console.log(current.state.audio);
+        // console.log(current.state.likes);
+        // console.log(current.state.audio);
         current.setState({isLoading: false});
       });
     };
