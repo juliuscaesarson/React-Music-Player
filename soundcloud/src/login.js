@@ -31,12 +31,21 @@ class Login extends Component {
 
   signup(e){
     e.preventDefault();
-    // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
-    fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then((u)=>{
-    }).then((u)=>{console.log(u)})
-    .catch((error) => {
-        alert(error.message);
+    if (this.state.email === '' || this.state.password === '') {
+      alert("Please enter email and password to sign up");
+
+    }
+    else {
+      // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
+      fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then((u)=>{
+      }).then((u)=>{
+        console.log(u);
       })
+      .catch((error) => {
+          alert(error.message);
+      })
+    }
+    
   }
 
   render() {
