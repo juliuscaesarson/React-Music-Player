@@ -2,6 +2,10 @@
 
 Simple music player created using React.js and Firebase DB
 
-Create an account to listen to, download, or upload music files
+Login to listen to, download, or upload music files
 
-You can also like other user's songs or search for a song
+You can "like" other user's songs or search for a song name
+
+Create an account or demo with test email:
+Email: test@gmail.com
+Password: tester
