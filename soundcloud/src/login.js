@@ -52,6 +52,7 @@ class Login extends Component {
     return (
        <div className="col-md-10">
           <form>
+            <h2>Login</h2>
             <div className="form">
               <label htmlFor="emailInput">Email Address </label>
               <input value={this.state.email} onChange={this.handleChange} type="email" name="email" id="emailInput" />
@@ -61,9 +62,22 @@ class Login extends Component {
               <input value={this.state.password} onChange={this.handleChange} type="password" name="password" id="passInput" />
             </div>
             <button type="submit" onClick={this.login} className="btn btn-primary">Login</button>
-            <button onClick={this.signup} className="btn btn-success">Register</button>
           </form>
  
+
+          <form>
+            <h2>Register</h2>
+            <div className="form">
+              <label htmlFor="emailInput">Email Address </label>
+              <input value={this.state.email} onChange={this.handleChange} type="email" name="email" id="emailInput" />
+            </div>
+            <div className="form">
+              <label htmlFor="passInput">Password </label>
+              <input value={this.state.password} onChange={this.handleChange} type="password" name="password" id="passInput" />
+            </div>
+            <button onClick={this.signup} className="btn btn-success">Register</button>
+          </form>
+
         </div>
     );
   }
