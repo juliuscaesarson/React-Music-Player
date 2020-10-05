@@ -10,7 +10,9 @@ class Login extends Component {
     this.signup = this.signup.bind(this);
     this.state = {
       email:'',
-      password:''
+      password:'',
+      email2:'',
+      password2:''
     }
   }
 
@@ -31,17 +33,18 @@ class Login extends Component {
 
   signup(e){
     e.preventDefault();
-    if (this.state.email === '' || this.state.password === '') {
+    if (this.state.email2 === '' || this.state.password2 === '') {
       alert("Please enter email and password to sign up");
 
     }
     else {
       // Followed firebase authentication tutorial at https://www.youtube.com/watch?v=r4EsP6rovwk
-      fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then((u)=>{
+      fire.auth().createUserWithEmailAndPassword(this.state.email2, this.state.password2).then((u)=>{
       }).then((u)=>{
         console.log(u);
       })
       .catch((error) => {
+          // console.log(error);
           alert(error.message);
       })
     }
@@ -69,11 +72,11 @@ class Login extends Component {
             <h2>Register</h2>
             <div className="form">
               <label htmlFor="emailInput">Email Address </label>
-              <input value={this.state.email} onChange={this.handleChange} type="email" name="email" id="emailInput" />
+              <input value={this.state.email2} onChange={this.handleChange} type="email" name="email2" id="emailInput2" />
             </div>
             <div className="form">
               <label htmlFor="passInput">Password </label>
-              <input value={this.state.password} onChange={this.handleChange} type="password" name="password" id="passInput" />
+              <input value={this.state.password2} onChange={this.handleChange} type="password" name="password2" id="passInput2" />
             </div>
             <button onClick={this.signup} className="btn btn-success">Register</button>
           </form>
